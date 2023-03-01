@@ -20,70 +20,18 @@ namespace BookStoreSubscription.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly IConfiguration configuration;
         private readonly SignInManager<IdentityUser> signInManager;
-        private readonly HashService hashService;
-        private readonly IDataProtector dataProtector;
 
         public AccountsController(UserManager<IdentityUser> userManager,
             IConfiguration configuration,
-            SignInManager<IdentityUser> signInManager,
-            IDataProtectionProvider dataProtectionProvider,
-            HashService hashService)
+            SignInManager<IdentityUser> signInManager)
         {
             this.userManager = userManager;
             this.configuration = configuration;
             this.signInManager = signInManager;
-            this.hashService = hashService;
-            dataProtector = dataProtectionProvider.CreateProtector("unique value and maybe secret");
-        }
-
-        [HttpGet("hash/{plainText}")]
-        public ActionResult RealizarHash(string plainText)
-        {
-            var result1 = hashService.Hash(plainText);
-            var result2 = hashService.Hash(plainText);
-            return Ok(new
-            {
-                plainText = plainText,
-                Hash1 = result1,
-                Hash2 = result2
-            });
-        }
-
-        [HttpGet("encrypt")]
-        public ActionResult Encriptar()
-        {
-            var plainText = "Rafael Aguero";
-            var encryptedText = dataProtector.Protect(plainText);
-            var unencrypted = dataProtector.Unprotect(encryptedText);
-
-            return Ok(new
-            {
-                textoPlano = plainText,
-                textoCifrado = encryptedText,
-                textoDesencriptado = unencrypted
-            });
-        }
-
-        [HttpGet("encryptByTime")]
-        public ActionResult EncriptarPorTiempo()
-        {
-            var timeLimitedDataProtector = dataProtector.ToTimeLimitedDataProtector();
-
-            var plainText = "Rafael Aguero";
-            var encryptedText = timeLimitedDataProtector.Protect(plainText, lifetime: TimeSpan.FromSeconds(5));
-            Thread.Sleep(6000);
-            var unencrypted = timeLimitedDataProtector.Unprotect(encryptedText);
-
-            return Ok(new
-            {
-                textoPlano = plainText,
-                textoCifrado = encryptedText,
-                textoDesencriptado = unencrypted
-            });
         }
 
         [HttpPost("register")] // api/accounts/register
-        public async Task<ActionResult<AuthResponseDTO>> Registrar(UserCredentialDTO userCredentialDTO)
+        public async Task<ActionResult<AuthResponseDTO>> Register(UserCredentialDTO userCredentialDTO)
         {
             var user = new IdentityUser
             {
@@ -94,7 +42,7 @@ namespace BookStoreSubscription.Controllers
 
             if (result.Succeeded)
             {
-                return await ConstruirToken(userCredentialDTO);
+                return await BuildToken(userCredentialDTO, user.Id);
             }
             else
             {
@@ -110,7 +58,8 @@ namespace BookStoreSubscription.Controllers
 
             if (resultado.Succeeded)
             {
-                return await ConstruirToken(userCredentialDTO);
+                var user = await userManager.FindByEmailAsync(userCredentialDTO.Email);
+                return await BuildToken(userCredentialDTO, user.Id);
             }
             else
             {
@@ -120,24 +69,27 @@ namespace BookStoreSubscription.Controllers
 
         [HttpGet("refreshToken")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<AuthResponseDTO>> Renovar()
+        public async Task<ActionResult<AuthResponseDTO>> Refresh()
         {
             var emailClaim = HttpContext.User.Claims.Where(claim => claim.Type == "email").FirstOrDefault();
             var email = emailClaim.Value;
+            var userIdClaim = HttpContext.User.Claims.Where(claim => claim.Type == "id").FirstOrDefault();
+            var userId = userIdClaim.Value;
+
             var userCredentialDTO = new UserCredentialDTO()
             {
                 Email = email
             };
 
-            return await ConstruirToken(userCredentialDTO);
+            return await BuildToken(userCredentialDTO, userId);
         }
 
-        private async Task<AuthResponseDTO> ConstruirToken(UserCredentialDTO userCredentialDTO)
+        private async Task<AuthResponseDTO> BuildToken(UserCredentialDTO userCredentialDTO, string userId)
         {
             var claims = new List<Claim>()
             {
                 new Claim("email", userCredentialDTO.Email),
-                new Claim("what I want", "whatever other value")
+                new Claim("id", userId)
             };
 
             var user = await userManager.FindByEmailAsync(userCredentialDTO.Email);
@@ -161,7 +113,7 @@ namespace BookStoreSubscription.Controllers
         }
 
         [HttpPost("MakeAdmin")]
-        public async Task<ActionResult> HacerAdmin(EditAdminDTO editAdminDTO)
+        public async Task<ActionResult> MakeAdmin(EditAdminDTO editAdminDTO)
         {
             var usuario = await userManager.FindByEmailAsync(editAdminDTO.Email);
             await userManager.AddClaimAsync(usuario, new Claim("isAdmin", "1"));
@@ -169,7 +121,7 @@ namespace BookStoreSubscription.Controllers
         }
 
         [HttpPost("RemoveAdmin")]
-        public async Task<ActionResult> RemoverAdmin(EditAdminDTO editAdminDTO)
+        public async Task<ActionResult> RemoveAdmin(EditAdminDTO editAdminDTO)
         {
             var usuario = await userManager.FindByEmailAsync(editAdminDTO.Email);
             await userManager.RemoveClaimAsync(usuario, new Claim("isAdmin", "1"));
