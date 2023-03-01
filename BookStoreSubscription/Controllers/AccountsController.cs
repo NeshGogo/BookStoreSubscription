@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using BookStoreSubscription.Services;
+using BookStoreSubscription.Entities;
 
 namespace BookStoreSubscription.Controllers
 {
@@ -20,14 +21,17 @@ namespace BookStoreSubscription.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly IConfiguration configuration;
         private readonly SignInManager<IdentityUser> signInManager;
+        private readonly KeyAPIService keyAPIService;
 
         public AccountsController(UserManager<IdentityUser> userManager,
             IConfiguration configuration,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<IdentityUser> signInManager,
+            KeyAPIService keyAPIService)
         {
             this.userManager = userManager;
             this.configuration = configuration;
             this.signInManager = signInManager;
+            this.keyAPIService = keyAPIService;
         }
 
         [HttpPost("register")] // api/accounts/register
@@ -42,6 +46,7 @@ namespace BookStoreSubscription.Controllers
 
             if (result.Succeeded)
             {
+                await keyAPIService.Add(user.Id, KeyType.Free);
                 return await BuildToken(userCredentialDTO, user.Id);
             }
             else

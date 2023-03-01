@@ -11,8 +11,9 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("defaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection")));
+               options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -21,8 +22,7 @@ builder.Services.AddAuthorization(opciones =>
 {
     opciones.AddPolicy("IsAdmin", politica => politica.RequireClaim("isAdmin"));
 });
-builder.Services.AddDataProtection();
-builder.Services.AddTransient<HashService>();
+builder.Services.AddScoped<KeyAPIService>();
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

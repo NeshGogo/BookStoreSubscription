@@ -23,5 +23,6 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Book> Books { get; set; }
     public DbSet<Comment> Comments { get; set; }
     public DbSet<AuthorBook> AuthorBooks { get; set; }
+    public DbSet<KeyAPI> KeyAPIs { get; set; }
 }
 
