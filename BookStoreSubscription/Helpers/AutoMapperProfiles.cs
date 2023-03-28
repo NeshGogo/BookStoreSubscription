@@ -21,6 +21,10 @@ public class AutoMapperProfiles : Profile
 
         CreateMap<CommentCreateDTO, Comment>();
         CreateMap<Comment, CommentDTO>();
+
+        CreateMap<KeyAPI, KeyApiDTO>();
+        CreateMap<KeyApiCreateDTO, KeyAPI>();
+
     }
 
     private List<BookDTO> MapAuthorDTOBooks(Author author, AuthorDTO au)

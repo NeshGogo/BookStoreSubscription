@@ -12,7 +12,7 @@ public class KeyAPIService
 
     public async Task Add(string userId, KeyType keyType)
     {
-        var key = Guid.NewGuid().ToString().Replace("-", "");
+        var key = GenerateKey();
         var entity = new KeyAPI
         {
             UserId = userId,
@@ -22,6 +22,11 @@ public class KeyAPIService
         };
         await dbContext.AddAsync(entity);
         await dbContext.SaveChangesAsync();
+    }
+
+    public string GenerateKey()
+    {
+        return Guid.NewGuid().ToString().Replace("-", "");
     }
 }
 
