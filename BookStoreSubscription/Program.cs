@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
+using BookStoreSubscription.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,6 +84,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseLimitRequests();
 
 app.MapControllers();
 

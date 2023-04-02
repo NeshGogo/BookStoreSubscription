@@ -24,5 +24,6 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Comment> Comments { get; set; }
     public DbSet<AuthorBook> AuthorBooks { get; set; }
     public DbSet<KeyAPI> KeyAPIs { get; set; }
+    public DbSet<Petition> Petitions { get; set; }
 }
 
