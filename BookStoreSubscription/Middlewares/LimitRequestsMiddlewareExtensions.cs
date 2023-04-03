@@ -26,6 +26,15 @@ namespace BookStoreSubscription.Middlewares
         {
             var limitRequestsConfig = new LimitRequestConfig();
             configuration.GetRequiredSection("LimitRequests").Bind(limitRequestsConfig);
+
+            var route = httpContext.Request.Path.ToString();
+            var existsInWhiteList = limitRequestsConfig.WhiteListRoutes.Any(x => route.Contains(x));
+            if (existsInWhiteList)
+            {
+                await next(httpContext);
+                return;
+            }
+
             var keyStringValues = httpContext.Request.Headers["X-API-Key"];
 
             if (keyStringValues.Count == 0)
