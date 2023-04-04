@@ -9,6 +9,8 @@ public class KeyAPI
     public bool Active { get; set; }
     public string UserId { get; set; }
     public IdentityUser User { get; set; }
+    public List<DomainRestriction> DomainRestrictions { get; set; }
+    public List<IpRestriction> ipRestrictions { get; set; }
 }
 
 public enum KeyType

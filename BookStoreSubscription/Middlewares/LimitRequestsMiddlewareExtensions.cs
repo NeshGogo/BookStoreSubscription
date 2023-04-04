@@ -52,7 +52,10 @@ namespace BookStoreSubscription.Middlewares
             }
 
             var key = keyStringValues[0];
-            var keyDB = await context.KeyAPIs.FirstOrDefaultAsync(x => x.Key == key);
+            var keyDB = await context.KeyAPIs
+                .Include(x => x.DomainRestrictions)
+                .Include(x => x.ipRestrictions)
+                .FirstOrDefaultAsync(x => x.Key == key);
             
             if (keyDB == null)
             {
@@ -82,6 +85,13 @@ namespace BookStoreSubscription.Middlewares
                 }
             }
 
+            var requestBeatsSomeOfRestrictions = RequestBeatsSomeOfRestrictions(keyDB, httpContext);
+            if (!requestBeatsSomeOfRestrictions)
+            {
+                httpContext.Response.StatusCode = 403;
+                return;
+            }
+
             var petition = new Petition
             {
                 KeyAPIId = keyDB.Id,
@@ -91,7 +101,30 @@ namespace BookStoreSubscription.Middlewares
             await context.SaveChangesAsync();
             await next(httpContext);
         }
-    
+
+        private bool RequestBeatsSomeOfRestrictions(KeyAPI keyAPI, HttpContext httpContext)
+        {
+            var thereIsRestrictions = keyAPI.DomainRestrictions.Any() || keyAPI.DomainRestrictions.Any();
+            if (!thereIsRestrictions)
+                return true;
+            var requestBeatsDomainRestrictions = RequestBeatsDomainRestrictions(keyAPI.DomainRestrictions, httpContext);
+            return requestBeatsDomainRestrictions;
+        }
+
+        private bool RequestBeatsDomainRestrictions(List<DomainRestriction> restrictions, HttpContext httpContext)
+        {
+            if(restrictions == null || restrictions.Count == 0)  
+                return false; 
+            var referer = httpContext.Request.Headers["Referer"].ToString();
+            if(referer == String.Empty)
+                return false;
+           
+            Uri uri = new Uri(referer);
+            string host = uri.Host;
+
+            return restrictions.Any(x => x.Domain == host);
+        }
+
     }
 
 }

@@ -25,5 +25,7 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<AuthorBook> AuthorBooks { get; set; }
     public DbSet<KeyAPI> KeyAPIs { get; set; }
     public DbSet<Petition> Petitions { get; set; }
+    public DbSet<DomainRestriction> DomainRestrictions { get; set; }
+    public DbSet<IpRestriction> IpRestrictionss { get; set; }
 }
 
