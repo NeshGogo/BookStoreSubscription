@@ -54,7 +54,7 @@ namespace BookStoreSubscription.Middlewares
             var key = keyStringValues[0];
             var keyDB = await context.KeyAPIs
                 .Include(x => x.DomainRestrictions)
-                .Include(x => x.ipRestrictions)
+                .Include(x => x.IpRestrictions)
                 .FirstOrDefaultAsync(x => x.Key == key);
             
             if (keyDB == null)
@@ -108,7 +108,19 @@ namespace BookStoreSubscription.Middlewares
             if (!thereIsRestrictions)
                 return true;
             var requestBeatsDomainRestrictions = RequestBeatsDomainRestrictions(keyAPI.DomainRestrictions, httpContext);
-            return requestBeatsDomainRestrictions;
+            var requestBeatsIpRestrictions = RequestBeatsIpRestrictions(keyAPI.IpRestrictions, httpContext);
+            return requestBeatsDomainRestrictions || requestBeatsIpRestrictions;
+        }
+
+        private bool RequestBeatsIpRestrictions(List<IpRestriction> restrictions, HttpContext httpContext)
+        {
+            if (restrictions == null || restrictions.Count == 0)
+                return false;
+            var ip = httpContext.Connection.RemoteIpAddress.ToString();
+            if (ip == String.Empty)
+                return false;
+
+            return restrictions.Any(x => x.IP == ip);
         }
 
         private bool RequestBeatsDomainRestrictions(List<DomainRestriction> restrictions, HttpContext httpContext)

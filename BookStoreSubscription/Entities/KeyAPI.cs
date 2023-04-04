@@ -10,7 +10,7 @@ public class KeyAPI
     public string UserId { get; set; }
     public IdentityUser User { get; set; }
     public List<DomainRestriction> DomainRestrictions { get; set; }
-    public List<IpRestriction> ipRestrictions { get; set; }
+    public List<IpRestriction> IpRestrictions { get; set; }
 }
 
 public enum KeyType
