@@ -25,6 +25,9 @@ public class AutoMapperProfiles : Profile
         CreateMap<KeyAPI, KeyApiDTO>();
         CreateMap<KeyApiCreateDTO, KeyAPI>();
 
+        CreateMap<DomainRestriction, DomainRestrictionDTO>();
+
+
     }
 
     private List<BookDTO> MapAuthorDTOBooks(Author author, AuthorDTO au)

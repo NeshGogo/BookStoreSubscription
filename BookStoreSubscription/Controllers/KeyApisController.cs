@@ -29,7 +29,10 @@ namespace BookStoreSubscription.Controllers
         public async Task<ActionResult<List<KeyApiDTO>>> Get()
         {
             var userId = GetUserId();
-            var keys = await context.KeyAPIs.Where(x => x.UserId == userId).ToListAsync();
+            var keys = await context.KeyAPIs
+                .Include(x => x.DomainRestrictions)
+                .Include(x => x.IpRestrictions)
+                .Where(x => x.UserId == userId).ToListAsync();
             return mapper.Map<List<KeyApiDTO>>(keys);
         }
 
