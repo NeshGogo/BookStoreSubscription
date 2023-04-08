@@ -7,5 +7,6 @@
         public bool Active { get; set; }
         public string KeyType { get; set; }
         public List<DomainRestrictionDTO> DomainRestrictions { get; set; }
+        public List<IpRestrictionDTO> IpRestrictions { get; set; }
     }
 }

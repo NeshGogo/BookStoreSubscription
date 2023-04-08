@@ -27,7 +27,7 @@ public class AutoMapperProfiles : Profile
 
         CreateMap<DomainRestriction, DomainRestrictionDTO>();
 
-
+        CreateMap<IpRestriction, IpRestrictionDTO>();
     }
 
     private List<BookDTO> MapAuthorDTOBooks(Author author, AuthorDTO au)

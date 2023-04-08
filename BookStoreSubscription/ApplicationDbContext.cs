@@ -26,6 +26,6 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<KeyAPI> KeyAPIs { get; set; }
     public DbSet<Petition> Petitions { get; set; }
     public DbSet<DomainRestriction> DomainRestrictions { get; set; }
-    public DbSet<IpRestriction> IpRestrictionss { get; set; }
+    public DbSet<IpRestriction> IpRestrictions { get; set; }
 }
 
