@@ -83,6 +83,11 @@ namespace BookStoreSubscription.Middlewares
                         "If you want to make more request update your subscription to a professional one.");
                     return;
                 }
+            }else if(keyDB.User.BadPayer)
+            {
+                httpContext.Response.StatusCode = 400;
+                await httpContext.Response.WriteAsync("The user is a bad payer.");
+                return;
             }
 
             var requestBeatsSomeOfRestrictions = RequestBeatsSomeOfRestrictions(keyDB, httpContext);

@@ -18,14 +18,14 @@ namespace BookStoreSubscription.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<User> userManager;
         private readonly IConfiguration configuration;
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly SignInManager<User> signInManager;
         private readonly KeyAPIService keyAPIService;
 
-        public AccountsController(UserManager<IdentityUser> userManager,
+        public AccountsController(UserManager<User> userManager,
             IConfiguration configuration,
-            SignInManager<IdentityUser> signInManager,
+            SignInManager<User> signInManager,
             KeyAPIService keyAPIService)
         {
             this.userManager = userManager;
@@ -37,7 +37,7 @@ namespace BookStoreSubscription.Controllers
         [HttpPost("register")] // api/accounts/register
         public async Task<ActionResult<AuthResponseDTO>> Register(UserCredentialDTO userCredentialDTO)
         {
-            var user = new IdentityUser
+            var user = new User
             {
                 UserName = userCredentialDTO.Email,
                 Email = userCredentialDTO.Email

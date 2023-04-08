@@ -16,11 +16,11 @@ public class CommentsController : ControllerBase
 {
     private readonly ApplicationDbContext context;
     private readonly IMapper mapper;
-    private readonly UserManager<IdentityUser> userManager;
+    private readonly UserManager<User> userManager;
 
     public CommentsController(ApplicationDbContext context,
         IMapper mapper,
-        UserManager<IdentityUser> userManager)
+        UserManager<User> userManager)
     {
         this.context = context;
         this.mapper = mapper;
