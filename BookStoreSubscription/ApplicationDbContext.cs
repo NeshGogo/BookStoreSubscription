@@ -17,6 +17,8 @@ public class ApplicationDbContext : IdentityDbContext
         modelBuilder.Entity<AuthorBook>()
             .HasKey(al => new { al.AuthorId, al.BookId });
 
+        modelBuilder.Entity<Invoice>()
+            .Property(x => x.Amount).HasColumnType("decimal(18, 2)");
     }
 
     public DbSet<Author> Authors { get; set; }
@@ -27,5 +29,7 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Petition> Petitions { get; set; }
     public DbSet<DomainRestriction> DomainRestrictions { get; set; }
     public DbSet<IpRestriction> IpRestrictions { get; set; }
+    public DbSet<Invoice> Invoices { get; set; }
+    public DbSet<InvoiceIssued> InvoiceIssueds { get; set; }
 }
 
