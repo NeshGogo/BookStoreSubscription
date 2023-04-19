@@ -37,7 +37,7 @@ namespace BookStoreSubscription.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Authors", (string)null);
                 });
 
             modelBuilder.Entity("BookStoreSubscription.Entities.AuthorBook", b =>
@@ -55,7 +55,7 @@ namespace BookStoreSubscription.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("AuthorBooks");
+                    b.ToTable("AuthorBooks", (string)null);
                 });
 
             modelBuilder.Entity("BookStoreSubscription.Entities.Book", b =>
@@ -76,7 +76,7 @@ namespace BookStoreSubscription.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("BookStoreSubscription.Entities.Comment", b =>
@@ -104,7 +104,7 @@ namespace BookStoreSubscription.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("BookStoreSubscription.Entities.DomainRestriction", b =>
@@ -126,7 +126,7 @@ namespace BookStoreSubscription.Migrations
 
                     b.HasIndex("KeyAPIId");
 
-                    b.ToTable("DomainRestrictions");
+                    b.ToTable("DomainRestrictions", (string)null);
                 });
 
             modelBuilder.Entity("BookStoreSubscription.Entities.Invoice", b =>
@@ -157,7 +157,7 @@ namespace BookStoreSubscription.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Invoices");
+                    b.ToTable("Invoices", (string)null);
                 });
 
             modelBuilder.Entity("BookStoreSubscription.Entities.InvoiceIssued", b =>
@@ -176,7 +176,7 @@ namespace BookStoreSubscription.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("InvoiceIssueds");
+                    b.ToTable("InvoiceIssueds", (string)null);
                 });
 
             modelBuilder.Entity("BookStoreSubscription.Entities.IpRestriction", b =>
@@ -198,7 +198,7 @@ namespace BookStoreSubscription.Migrations
 
                     b.HasIndex("KeyAPIId");
 
-                    b.ToTable("IpRestrictions");
+                    b.ToTable("IpRestrictions", (string)null);
                 });
 
             modelBuilder.Entity("BookStoreSubscription.Entities.KeyAPI", b =>
@@ -227,7 +227,7 @@ namespace BookStoreSubscription.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("KeyAPIs");
+                    b.ToTable("KeyAPIs", (string)null);
                 });
 
             modelBuilder.Entity("BookStoreSubscription.Entities.Petition", b =>
@@ -248,7 +248,7 @@ namespace BookStoreSubscription.Migrations
 
                     b.HasIndex("KeyAPIId");
 
-                    b.ToTable("Petitions");
+                    b.ToTable("Petitions", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
