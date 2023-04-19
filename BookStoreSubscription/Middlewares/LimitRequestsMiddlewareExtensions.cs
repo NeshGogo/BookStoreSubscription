@@ -54,6 +54,7 @@ namespace BookStoreSubscription.Middlewares
             var key = keyStringValues[0];
             var keyDB = await context.KeyAPIs
                 .Include(x => x.DomainRestrictions)
+                .Include(x => x.User)
                 .Include(x => x.IpRestrictions)
                 .FirstOrDefaultAsync(x => x.Key == key);
             

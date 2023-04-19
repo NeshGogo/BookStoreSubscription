@@ -25,6 +25,7 @@ builder.Services.AddAuthorization(opciones =>
     opciones.AddPolicy("IsAdmin", politica => politica.RequireClaim("isAdmin"));
 });
 builder.Services.AddScoped<KeyAPIService>();
+builder.Services.AddHostedService<InvoiceHostedService>();
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
